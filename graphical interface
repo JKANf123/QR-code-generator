@@ -1,0 +1,88 @@
+import tkinter as tk
+from tkinter import messagebox
+import qrcode
+from tkinter.colorchooser import askcolor
+
+# Функция для генерации QR-кода с выбранными цветами
+def generate_qr_code():
+    # Получаем данные из поля ввода
+    input_data = data_entry.get()
+    if not input_data:
+        messagebox.showerror("Ошибка", "Пожалуйста, введите данные для QR-кода!")
+        return
+    
+    # Получаем цвета фона и текста
+    fg_color = fg_color_entry.get()
+    bg_color = bg_color_entry.get()
+
+    if fg_color == "" or bg_color == "":
+        messagebox.showerror("Ошибка", "Пожалуйста, выберите цвета для текста и фона!")
+        return
+
+    try:
+        # Генерация QR-кода
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(input_data)
+        qr.make(fit=True)
+
+        # Генерация изображения QR-кода с выбранными цветами
+        img = qr.make_image(fill=fg_color, back_color=bg_color)
+        img.show()
+        img.save("generated_qr_code.png")
+        messagebox.showinfo("QR-код сгенерирован", "QR-код успешно создан и сохранен как 'generated_qr_code.png'.")
+
+    except Exception as e:
+        messagebox.showerror("Ошибка", f"Произошла ошибка при генерации QR-кода: {e}")
+
+# Функция для выбора цвета текста
+def choose_fg_color():
+    color = askcolor()[1]
+    if color:
+        fg_color_entry.delete(0, tk.END)
+        fg_color_entry.insert(0, color)
+
+# Функция для выбора цвета фона
+def choose_bg_color():
+    color = askcolor()[1]
+    if color:
+        bg_color_entry.delete(0, tk.END)
+        bg_color_entry.insert(0, color)
+
+# Создание главного окна
+root = tk.Tk()
+root.title("QR-код Генератор")
+
+# Метки и поля ввода
+data_label = tk.Label(root, text="Введите данные для QR-кода:")
+data_label.pack(pady=5)
+
+data_entry = tk.Entry(root, width=40)
+data_entry.pack(pady=5)
+
+fg_color_label = tk.Label(root, text="Выберите цвет текста:")
+fg_color_label.pack(pady=5)
+
+fg_color_entry = tk.Entry(root, width=40)
+fg_color_entry.pack(pady=5)
+fg_color_button = tk.Button(root, text="Выбрать цвет", command=choose_fg_color)
+fg_color_button.pack(pady=5)
+
+bg_color_label = tk.Label(root, text="Выберите цвет фона:")
+bg_color_label.pack(pady=5)
+
+bg_color_entry = tk.Entry(root, width=40)
+bg_color_entry.pack(pady=5)
+bg_color_button = tk.Button(root, text="Выбрать цвет", command=choose_bg_color)
+bg_color_button.pack(pady=5)
+
+# Кнопка для генерации QR-кода
+generate_button = tk.Button(root, text="Сгенерировать QR-код", command=generate_qr_code)
+generate_button.pack(pady=20)
+
+# Запуск интерфейса
+root.mainloop()
