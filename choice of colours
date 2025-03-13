@@ -1,0 +1,54 @@
+import qrcode
+
+# Функция для генерации QR-кода для ссылки
+def generate_qr_for_url(url, fg_color='black', bg_color='white'):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+    img = qr.make_image(fill=fg_color, back_color=bg_color)
+    img.show()
+    img.save('qrcode_url_colored.png')  # Сохранение QR-кода в файл
+
+# Функция для генерации QR-кода для текста
+def generate_qr_for_text(text, fg_color='black', bg_color='white'):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(text)
+    qr.make(fit=True)
+    img = qr.make_image(fill=fg_color, back_color=bg_color)
+    img.show()
+    img.save('qrcode_text_colored.png')  # Сохранение QR-кода в файл
+
+# Функция для генерации QR-кода для Wi-Fi
+def generate_qr_for_wifi(ssid, password, hidden=False, fg_color='black', bg_color='white'):
+    wifi_info = f"WIFI:T:WPA;S:{ssid};P:{password};H:{str(hidden).upper()};;"
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(wifi_info)
+    qr.make(fit=True)
+    img = qr.make_image(fill=fg_color, back_color=bg_color)
+    img.show()
+    img.save('qrcode_wifi_colored.png')  # Сохранение QR-кода в файл
+
+# Примеры использования:
+# Генерация QR-кода для URL с выбранными цветами
+generate_qr_for_url('https://www.example.com', fg_color='blue', bg_color='yellow')
+
+# Генерация QR-кода для текста с выбранными цветами
+generate_qr_for_text('Hello, this is a QR code for text.', fg_color='green', bg_color='black')
+
+# Генерация QR-кода для Wi-Fi (с скрытым SSID) с выбранными цветами
+generate_qr_for_wifi('MyWiFiSSID', 'MySecurePassword', hidden=True, fg_color='red', bg_color='white')
